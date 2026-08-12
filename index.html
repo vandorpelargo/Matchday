@@ -689,8 +689,8 @@ function swapLastLetter(name){
 
 
 
-el('downloadBtn').addEventListener('click', () => {
-  const opp = (el('opponent1').value || 'match').replace(/\s+/g,'_');
+function downloadMatchdayImage(canvas, opponentValue) {
+  const opp = (opponentValue || 'match').replace(/\s+/g, '_');
   const fileName = `matchday_story_${opp}.png`;
 
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
@@ -699,10 +699,30 @@ el('downloadBtn').addEventListener('click', () => {
     const url = URL.createObjectURL(blob);
 
     if (isMobile) {
-      // Mobile: open image in new tab (this ALWAYS works)
-      window.open(url, '_blank');
+      // Mobile: open image in new tab
+      const win = window.open(url, '_blank');
+
+      // If popup blocked, fallback to showing the image inline
+      if (!win) {
+        const img = document.createElement('img');
+        img.src = url;
+        img.style.width = '100%';
+        img.style.maxWidth = '600px';
+        img.style.display = 'block';
+        img.style.margin = '20px auto';
+
+        const container = document.createElement('div');
+        container.style.textAlign = 'center';
+        container.style.padding = '20px';
+        container.innerHTML = `
+          <p>Tap and hold the image to save it.</p>
+        `;
+        container.appendChild(img);
+
+        document.body.appendChild(container);
+      }
     } else {
-      // Desktop: trigger download
+      // Desktop: direct download
       const a = document.createElement('a');
       a.href = url;
       a.download = fileName;
@@ -710,6 +730,11 @@ el('downloadBtn').addEventListener('click', () => {
       URL.revokeObjectURL(url);
     }
   }, 'image/png');
+}
+
+// Bind to your button
+el('downloadBtn').addEventListener('click', () => {
+  downloadMatchdayImage(canvas, el('opponent1').value);
 });
 
 
