@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Matchday Poster Generator</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;700;800&display=swap');
+
+  :root{
+    --panel-bg: #14161c;
+    --panel-bg-2: #1b1e26;
+    --border: #2a2e38;
+    --text: #eef0f4;
+    --text-dim: #9aa0ac;
+    --accent-ui: #4f7cff;
+  }
+
+  *{ box-sizing:border-box; }
+
+  body{
+    margin:0;
+    font-family:'Inter',sans-serif;
+    background:#0b0c0f;
+    color:var(--text);
+    min-height:100vh;
+  }
+
+  .app{
+    display:flex;
+    flex-wrap:wrap;
+    gap:24px;
+    padding:24px;
+    max-width:1400px;
+    margin:0 auto;
+    align-items:flex-start;
+  }
+
+  .form-panel{
+    flex:1 1 360px;
+    max-width:420px;
+    background:var(--panel-bg);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:22px;
+  }
+
+  .form-panel h1{
+    font-size:18px;
+    margin:0 0 4px;
+    letter-spacing:0.02em;
+  }
+  .form-panel .sub{
+    color:var(--text-dim);
+    font-size:13px;
+    margin:0 0 20px;
+  }
+
+  .field{ margin-bottom:16px; }
+  .field label{
+    display:block;
+    font-size:12px;
+    font-weight:600;
+    color:var(--text-dim);
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    margin-bottom:6px;
+  }
+  .field input[type=text], .field input[type=date], .field input[type=time], .field select{
+    width:100%;
+    padding:10px 12px;
+    background:var(--panel-bg-2);
+    border:1px solid var(--border);
+    border-radius:8px;
+    color:var(--text);
+    font-family:inherit;
+    font-size:14px;
+  }
+  .field input:focus, .field select:focus{
+    outline:2px solid var(--accent-ui);
+    outline-offset:1px;
+  }
+
+  .row2{ display:flex; gap:12px; }
+  .row2 > div{ flex:1; }
+
+  .toggle-group{
+    display:flex;
+    gap:8px;
+  }
+  .toggle-group button{
+    flex:1;
+    padding:10px 0;
+    border-radius:8px;
+    border:1px solid var(--border);
+    background:var(--panel-bg-2);
+    color:var(--text-dim);
+    font-family:inherit;
+    font-weight:700;
+    font-size:13px;
+    cursor:pointer;
+    letter-spacing:0.03em;
+  }
+  .toggle-group button.active{
+    background:var(--accent-ui);
+    border-color:var(--accent-ui);
+    color:#fff;
+  }
+
+  .color-row{ display:flex; gap:12px; }
+  .color-field{
+    flex:1;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:var(--panel-bg-2);
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:8px 10px;
+  }
+  .color-field input[type=color]{
+    width:32px; height:32px;
+    border:none;
+    background:none;
+    padding:0;
+    cursor:pointer;
+  }
+  .color-field span{ font-size:12px; color:var(--text-dim); }
+
+  .logo-drop{
+    border:1.5px dashed var(--border);
+    border-radius:8px;
+    padding:14px;
+    text-align:center;
+    font-size:12px;
+    color:var(--text-dim);
+    cursor:pointer;
+    background:var(--panel-bg-2);
+  }
+  .logo-drop.has-logo{ color:var(--text); }
+  .logo-drop input{ display:none; }
+  .logo-clear{
+    display:block;
+    margin-top:6px;
+    font-size:11px;
+    color:var(--accent-ui);
+    background:none;
+    border:none;
+    cursor:pointer;
+    padding:0;
+  }
+
+  .download-btn{
+    width:100%;
+    padding:14px;
+    border-radius:10px;
+    border:none;
+    background:linear-gradient(135deg,#4f7cff,#7a5cff);
+    color:#fff;
+    font-family:inherit;
+    font-weight:800;
+    font-size:14px;
+    letter-spacing:0.03em;
+    cursor:pointer;
+    margin-top:6px;
+  }
+  .download-btn:active{ transform:translateY(1px); }
+
+  .preview-panel{
+    flex:1 1 460px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:12px;
+  }
+  .canvas-wrap{
+    width:100%;
+    max-width:520px;
+    aspect-ratio:1/1;
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 20px 60px rgba(0,0,0,0.5);
+    background:#000;
+  }
+  #posterCanvas{
+    width:100%;
+    height:100%;
+    display:block;
+  }
+  .hint{
+    font-size:12px;
+    color:var(--text-dim);
+    text-align:center;
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="form-panel">
+    <h1>Matchday Post Builder</h1>
+    <p class="sub">Fill in the details — the poster updates live.</p>
+
+    <div class="field">
+      <label for="clubName">Your club name</label>
+      <input type="text" id="clubName" value="City United FC">
+    </div>
+
+    <div class="field">
+      <label for="opponent">Opponent</label>
+      <input type="text" id="opponent" value="Riverside Athletic">
+    </div>
+
+    <div class="field">
+      <label>Home or away</label>
+      <div class="toggle-group">
+        <button type="button" id="btnHome" class="active">HOME</button>
+        <button type="button" id="btnAway">AWAY</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="competition">Competition / league (optional)</label>
+      <input type="text" id="competition" value="League Cup — Round 3">
+    </div>
+
+    <div class="row2">
+      <div class="field">
+        <label for="matchDate">Date</label>
+        <input type="date" id="matchDate">
+      </div>
+      <div class="field">
+        <label for="matchTime">Kickoff time</label>
+        <input type="time" id="matchTime" value="15:00">
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="venue">Location / venue</label>
+      <input type="text" id="venue" value="Meadowbrook Stadium">
+    </div>
+
+    <div class="field">
+      <label>Colors</label>
+      <div class="color-row">
+        <div class="color-field">
+          <input type="color" id="colorPrimary" value="#0c1b33">
+          <span>Background</span>
+        </div>
+        <div class="color-field">
+          <input type="color" id="colorAccent" value="#f2a900">
+          <span>Accent</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Club badge / logo</label>
+      <label class="logo-drop" id="logoDrop" for="logoInput">
+        <span id="logoDropText">Click to upload a logo (PNG/JPG)</span>
+        <input type="file" id="logoInput" accept="image/*">
+      </label>
+      <button type="button" class="logo-clear" id="logoClear" style="display:none;">Remove logo</button>
+    </div>
+
+    <button class="download-btn" id="downloadBtn">Download PNG</button>
+  </div>
+
+  <div class="preview-panel">
+    <div class="canvas-wrap">
+      <canvas id="posterCanvas" width="1080" height="1080"></canvas>
+    </div>
+    <p class="hint">1080 × 1080px — ready to post straight to Instagram feed.</p>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('posterCanvas');
+const ctx = canvas.getContext('2d');
+const W = canvas.width, H = canvas.height;
+
+let isHome = true;
+let logoImg = null;
+
+const el = id => document.getElementById(id);
+const inputs = ['clubName','opponent','competition','matchDate','matchTime','venue','colorPrimary','colorAccent'];
+inputs.forEach(id => el(id).addEventListener('input', draw));
+
+el('btnHome').addEventListener('click', () => { isHome = true; el('btnHome').classList.add('active'); el('btnAway').classList.remove('active'); draw(); });
+el('btnAway').addEventListener('click', () => { isHome = false; el('btnAway').classList.add('active'); el('btnHome').classList.remove('active'); draw(); });
+
+el('logoInput').addEventListener('change', e => {
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = evt => {
+    const img = new Image();
+    img.onload = () => {
+      logoImg = img;
+      el('logoDropText').textContent = file.name;
+      el('logoDrop').classList.add('has-logo');
+      el('logoClear').style.display = 'block';
+      draw();
+    };
+    img.src = evt.target.result;
+  };
+  reader.readAsDataURL(file);
+});
+
+el('logoClear').addEventListener('click', () => {
+  logoImg = null;
+  el('logoInput').value = '';
+  el('logoDropText').textContent = 'Click to upload a logo (PNG/JPG)';
+  el('logoDrop').classList.remove('has-logo');
+  el('logoClear').style.display = 'none';
+  draw();
+});
+
+// default date = next Saturday
+(function setDefaultDate(){
+  const d = new Date();
+  const day = d.getDay();
+  const addDays = (6 - day + 7) % 7 || 7;
+  d.setDate(d.getDate() + addDays);
+  el('matchDate').value = d.toISOString().slice(0,10);
+})();
+
+function hexToRgb(hex){
+  const m = hex.replace('#','');
+  return {
+    r: parseInt(m.substring(0,2),16),
+    g: parseInt(m.substring(2,4),16),
+    b: parseInt(m.substring(4,6),16)
+  };
+}
+function shade(hex, amt){
+  const {r,g,b} = hexToRgb(hex);
+  const f = c => Math.max(0, Math.min(255, Math.round(c + amt)));
+  return `rgb(${f(r)},${f(g)},${f(b)})`;
+}
+function rgba(hex, a){
+  const {r,g,b} = hexToRgb(hex);
+  return `rgba(${r},${g},${b},${a})`;
+}
+
+function formatDate(dateStr){
+  if(!dateStr) return '';
+  const [y,m,d] = dateStr.split('-').map(Number);
+  const dt = new Date(y, m-1, d);
+  return dt.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' }).toUpperCase();
+}
+function formatTime(timeStr){
+  if(!timeStr) return '';
+  let [h,m] = timeStr.split(':').map(Number);
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  h = h % 12 || 12;
+  return `${h}:${String(m).padStart(2,'0')} ${ampm}`;
+}
+
+function wrapText(text, maxWidth, font){
+  ctx.font = font;
+  const words = text.split(' ');
+  const lines = [];
+  let line = '';
+  for(const w of words){
+    const test = line ? line + ' ' + w : w;
+    if(ctx.measureText(test).width > maxWidth && line){
+      lines.push(line);
+      line = w;
+    } else {
+      line = test;
+    }
+  }
+  if(line) lines.push(line);
+  return lines;
+}
+
+function drawPin(cx, cy, size, color){
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.arc(cx, cy - size*0.15, size*0.42, 0, Math.PI*2);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(cx - size*0.32, cy);
+  ctx.lineTo(cx + size*0.32, cy);
+  ctx.lineTo(cx, cy + size*0.62);
+  ctx.closePath();
+  ctx.fill();
+  ctx.globalCompositeOperation = 'destination-out';
+  ctx.beginPath();
+  ctx.arc(cx, cy - size*0.15, size*0.16, 0, Math.PI*2);
+  ctx.fill();
+  ctx.globalCompositeOperation = 'source-over';
+}
+function drawCalendar(cx, cy, size, color){
+  ctx.strokeStyle = color;
+  ctx.lineWidth = size*0.08;
+  ctx.strokeRect(cx-size/2, cy-size/2, size, size);
+  ctx.beginPath();
+  ctx.moveTo(cx-size/2, cy-size*0.15);
+  ctx.lineTo(cx+size/2, cy-size*0.15);
+  ctx.stroke();
+  ctx.lineWidth = size*0.1;
+  ctx.beginPath(); ctx.moveTo(cx-size*0.28, cy-size*0.62); ctx.lineTo(cx-size*0.28, cy-size*0.3); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx+size*0.28, cy-size*0.62); ctx.lineTo(cx+size*0.28, cy-size*0.3); ctx.stroke();
+}
+function drawClock(cx, cy, size, color){
+  ctx.strokeStyle = color;
+  ctx.lineWidth = size*0.09;
+  ctx.beginPath(); ctx.arc(cx, cy, size/2, 0, Math.PI*2); ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(cx, cy);
+  ctx.lineTo(cx, cy - size*0.28);
+  ctx.moveTo(cx, cy);
+  ctx.lineTo(cx + size*0.2, cy);
+  ctx.stroke();
+}
+
+function draw(){
+  const clubName = el('clubName').value || 'HOME CLUB';
+  const opponent = (el('opponent').value || 'OPPONENT').toUpperCase();
+  const competition = el('competition').value || '';
+  const dateStr = formatDate(el('matchDate').value);
+  const timeStr = formatTime(el('matchTime').value);
+  const venue = el('venue').value || '';
+  const primary = el('colorPrimary').value;
+  const accent = el('colorAccent').value;
+
+  ctx.clearRect(0,0,W,H);
+
+  // background
+  const bgGrad = ctx.createLinearGradient(0,0,W,H);
+  bgGrad.addColorStop(0, shade(primary, 18));
+  bgGrad.addColorStop(1, shade(primary, -25));
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0,0,W,H);
+
+  // diagonal accent stripe (signature element)
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(-100, H*0.62);
+  ctx.lineTo(W*0.55, -100);
+  ctx.lineTo(W+100, -100);
+  ctx.lineTo(W+100, H*0.30);
+  ctx.lineTo(W*0.20, H+100);
+  ctx.lineTo(-100, H+100);
+  ctx.closePath();
+  ctx.fillStyle = rgba(accent, 0.10);
+  ctx.fill();
+  ctx.restore();
+
+  // thin diagonal accent line
+  ctx.save();
+  ctx.strokeStyle = rgba(accent, 0.5);
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.moveTo(-50, H*0.66);
+  ctx.lineTo(W*0.58, -50);
+  ctx.stroke();
+  ctx.restore();
+
+  // top bar: badge + club name + HOME/AWAY pill
+  const topY = 96;
+  if(logoImg){
+    const r = 46;
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(96, topY, r, 0, Math.PI*2);
+    ctx.closePath();
+    ctx.clip();
+    const iw = logoImg.width, ih = logoImg.height;
+    const scale = Math.max((r*2)/iw, (r*2)/ih);
+    const dw = iw*scale, dh = ih*scale;
+    ctx.drawImage(logoImg, 96-dw/2, topY-dh/2, dw, dh);
+    ctx.restore();
+    ctx.strokeStyle = rgba(accent, 0.8);
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(96, topY, r, 0, Math.PI*2);
+    ctx.stroke();
+  } else {
+    ctx.fillStyle = rgba(accent, 0.16);
+    ctx.beginPath();
+    ctx.arc(96, topY, 46, 0, Math.PI*2);
+    ctx.fill();
+    ctx.strokeStyle = rgba(accent, 0.8);
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(96, topY, 46, 0, Math.PI*2);
+    ctx.stroke();
+    ctx.fillStyle = accent;
+    ctx.font = "700 34px Inter";
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    const initials = clubName.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    ctx.fillText(initials, 96, topY+2);
+  }
+
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'alphabetic';
+  ctx.fillStyle = '#ffffff';
+  ctx.font = "800 30px Inter";
+  ctx.fillText(clubName.toUpperCase(), 162, topY - 6);
+  ctx.fillStyle = rgba('#ffffff', 0.6);
+  ctx.font = "600 20px Inter";
+  ctx.fillText('MATCHDAY', 162, topY + 24);
+
+  // home/away pill
+  const pillLabel = isHome ? 'HOME' : 'AWAY';
+  ctx.font = "800 22px Inter";
+  const pillW = ctx.measureText(pillLabel).width + 44;
+  const pillX = W - 60 - pillW;
+  ctx.fillStyle = accent;
+  roundRect(ctx, pillX, topY-24, pillW, 48, 24);
+  ctx.fill();
+  ctx.fillStyle = '#101010';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(pillLabel, pillX + pillW/2, topY + 1);
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'alphabetic';
+
+  // competition eyebrow
+  if(competition){
+    ctx.fillStyle = rgba(accent, 0.95);
+    ctx.font = "700 24px Inter";
+    ctx.textAlign = 'center';
+    ctx.fillText(competition.toUpperCase(), W/2, 250);
+  }
+
+  // VS block
+  ctx.textAlign = 'center';
+  ctx.fillStyle = rgba('#ffffff', 0.18);
+  ctx.font = "400 130px Anton";
+  ctx.fillText('VS', W/2, 400);
+
+  // team line: "US" vs opponent
+  ctx.font = "400 46px Anton";
+  ctx.fillStyle = rgba('#ffffff', 0.7);
+  const usLabel = isHome ? clubName.toUpperCase() : opponent;
+  const themLabel = isHome ? opponent : clubName.toUpperCase();
+  ctx.fillText(usLabel, W/2, 470);
+
+  // big opponent name (the hero)
+  const heroFont = "400 96px Anton";
+  ctx.font = heroFont;
+  let heroLines = wrapText(themLabel, W-160, heroFont);
+  if(heroLines.length > 2){ heroLines = [themLabel]; ctx.font = "400 66px Anton"; heroLines = wrapText(themLabel, W-160, "400 66px Anton"); }
+  ctx.fillStyle = accent;
+  ctx.font = heroLines.length > 1 ? "400 78px Anton" : "400 96px Anton";
+  let heroY = 590;
+  heroLines.forEach((line,i) => {
+    ctx.fillText(line, W/2, heroY + i*90);
+  });
+
+  // vs small connector under "us" line, above hero
+  ctx.font = "600 24px Inter";
+  ctx.fillStyle = rgba('#ffffff', 0.4);
+
+  // bottom info bar
+  const barH = 230;
+  const barY = H - barH;
+  ctx.fillStyle = rgba('#000000', 0.32);
+  ctx.fillRect(0, barY, W, barH);
+  ctx.strokeStyle = rgba(accent, 0.6);
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(0, barY);
+  ctx.lineTo(W, barY);
+  ctx.stroke();
+
+  const rowY1 = barY + 62;
+  const rowY2 = barY + 150;
+  const iconSize = 34;
+  const leftX = 90;
+
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+
+  // date
+  drawCalendar(leftX, rowY1, iconSize, accent);
+  ctx.fillStyle = '#ffffff';
+  ctx.font = "700 30px Inter";
+  ctx.fillText(dateStr || 'DATE TBC', leftX + 40, rowY1);
+
+  // time
+  ctx.font = "700 30px Inter";
+  const timeX = W - 90;
+  ctx.textAlign = 'right';
+  ctx.fillText(timeStr || '', timeX - 40, rowY1);
+  drawClock(timeX, rowY1, iconSize, accent);
+
+  // venue (full width row below)
+  ctx.textAlign = 'left';
+  drawPin(leftX, rowY2, iconSize, accent);
+  ctx.fillStyle = rgba('#ffffff', 0.92);
+  ctx.font = "600 28px Inter";
+  const venueLines = wrapText(venue.toUpperCase(), W - 180, "600 28px Inter");
+  venueLines.slice(0,2).forEach((line,i) => {
+    ctx.fillText(line, leftX + 40, rowY2 + i*34 - (venueLines.length>1?17:0));
+  });
+
+  ctx.textBaseline = 'alphabetic';
+}
+
+function roundRect(ctx, x, y, w, h, r){
+  ctx.beginPath();
+  ctx.moveTo(x+r, y);
+  ctx.arcTo(x+w, y, x+w, y+h, r);
+  ctx.arcTo(x+w, y+h, x, y+h, r);
+  ctx.arcTo(x, y+h, x, y, r);
+  ctx.arcTo(x, y, x+w, y, r);
+  ctx.closePath();
+}
+
+el('downloadBtn').addEventListener('click', () => {
+  const link = document.createElement('a');
+  const opponent = (el('opponent').value || 'match').replace(/\s+/g,'_');
+  link.download = `matchday_${opponent}.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+});
+
+// load fonts then draw
+if(document.fonts && document.fonts.load){
+  Promise.all([
+    document.fonts.load("400 96px Anton"),
+    document.fonts.load("800 30px Inter"),
+    document.fonts.load("700 24px Inter")
+  ]).then(draw).catch(draw);
+  document.fonts.ready.then(draw);
+} else {
+  draw();
+}
+draw();
+setTimeout(draw, 300);
+</script>
+
+</body>
+</html>
