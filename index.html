@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
 <meta charset="UTF-8">
-<title>Matchday Poster Generator</title>
+<title>Matchday Story Generator</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Chela+One&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Inter:wght@400;600;700;800&display=swap');
 
   :root{
     --panel-bg: #14161c;
@@ -14,9 +14,7 @@
     --text-dim: #9aa0ac;
     --accent-ui: #4f7cff;
   }
-
   *{ box-sizing:border-box; }
-
   body{
     margin:0;
     font-family:'Inter',sans-serif;
@@ -24,7 +22,6 @@
     color:var(--text);
     min-height:100vh;
   }
-
   .app{
     display:flex;
     flex-wrap:wrap;
@@ -34,232 +31,198 @@
     margin:0 auto;
     align-items:flex-start;
   }
-
   .form-panel{
-    flex:1 1 360px;
-    max-width:420px;
+    flex:1 1 380px;
+    max-width:440px;
     background:var(--panel-bg);
     border:1px solid var(--border);
     border-radius:14px;
     padding:22px;
   }
-
-  .form-panel h1{
-    font-size:18px;
-    margin:0 0 4px;
-    letter-spacing:0.02em;
-  }
-  .form-panel .sub{
-    color:var(--text-dim);
-    font-size:13px;
-    margin:0 0 20px;
-  }
-
+  .form-panel h1{ font-size:18px; margin:0 0 4px; }
+  .form-panel .sub{ color:var(--text-dim); font-size:13px; margin:0 0 20px; }
   .field{ margin-bottom:16px; }
   .field label{
-    display:block;
-    font-size:12px;
-    font-weight:600;
-    color:var(--text-dim);
-    text-transform:uppercase;
-    letter-spacing:0.05em;
-    margin-bottom:6px;
+    display:block; font-size:12px; font-weight:600; color:var(--text-dim);
+    text-transform:uppercase; letter-spacing:0.05em; margin-bottom:6px;
   }
-  .field input[type=text], .field input[type=date], .field input[type=time], .field select{
-    width:100%;
-    padding:10px 12px;
-    background:var(--panel-bg-2);
-    border:1px solid var(--border);
-    border-radius:8px;
-    color:var(--text);
-    font-family:inherit;
-    font-size:14px;
+  .field input[type=text], .field input[type=date], .field input[type=time]{
+    width:100%; padding:10px 12px; background:var(--panel-bg-2);
+    border:1px solid var(--border); border-radius:8px; color:var(--text);
+    font-family:inherit; font-size:14px;
   }
-  .field input:focus, .field select:focus{
-    outline:2px solid var(--accent-ui);
-    outline-offset:1px;
-  }
-
+  .field input:focus{ outline:2px solid var(--accent-ui); outline-offset:1px; }
   .row2{ display:flex; gap:12px; }
   .row2 > div{ flex:1; }
-
-  .toggle-group{
-    display:flex;
-    gap:8px;
-  }
+  .toggle-group{ display:flex; gap:8px; }
   .toggle-group button{
-    flex:1;
-    padding:10px 0;
-    border-radius:8px;
-    border:1px solid var(--border);
-    background:var(--panel-bg-2);
-    color:var(--text-dim);
-    font-family:inherit;
-    font-weight:700;
-    font-size:13px;
-    cursor:pointer;
-    letter-spacing:0.03em;
+    flex:1; padding:10px 0; border-radius:8px; border:1px solid var(--border);
+    background:var(--panel-bg-2); color:var(--text-dim); font-family:inherit;
+    font-weight:700; font-size:13px; cursor:pointer; letter-spacing:0.03em;
   }
-  .toggle-group button.active{
-    background:var(--accent-ui);
-    border-color:var(--accent-ui);
-    color:#fff;
-  }
-
+  .toggle-group button.active{ background:var(--accent-ui); border-color:var(--accent-ui); color:#fff; }
   .color-row{ display:flex; gap:12px; }
   .color-field{
-    flex:1;
-    display:flex;
-    align-items:center;
-    gap:10px;
-    background:var(--panel-bg-2);
-    border:1px solid var(--border);
-    border-radius:8px;
-    padding:8px 10px;
+    flex:1; display:flex; align-items:center; gap:10px; background:var(--panel-bg-2);
+    border:1px solid var(--border); border-radius:8px; padding:8px 10px;
   }
-  .color-field input[type=color]{
-    width:32px; height:32px;
-    border:none;
-    background:none;
-    padding:0;
-    cursor:pointer;
-  }
+  .color-field input[type=color]{ width:32px; height:32px; border:none; background:none; padding:0; cursor:pointer; }
   .color-field span{ font-size:12px; color:var(--text-dim); }
-
   .logo-drop{
-    border:1.5px dashed var(--border);
-    border-radius:8px;
-    padding:14px;
-    text-align:center;
-    font-size:12px;
-    color:var(--text-dim);
-    cursor:pointer;
-    background:var(--panel-bg-2);
+    border:1.5px dashed var(--border); border-radius:8px; padding:14px; text-align:center;
+    font-size:12px; color:var(--text-dim); cursor:pointer; background:var(--panel-bg-2); display:block;
   }
   .logo-drop.has-logo{ color:var(--text); }
   .logo-drop input{ display:none; }
   .logo-clear{
-    display:block;
-    margin-top:6px;
-    font-size:11px;
-    color:var(--accent-ui);
-    background:none;
-    border:none;
-    cursor:pointer;
-    padding:0;
+    display:block; margin-top:6px; font-size:11px; color:var(--accent-ui);
+    background:none; border:none; cursor:pointer; padding:0;
   }
-
   .download-btn{
-    width:100%;
-    padding:14px;
-    border-radius:10px;
-    border:none;
-    background:linear-gradient(135deg,#4f7cff,#7a5cff);
-    color:#fff;
-    font-family:inherit;
-    font-weight:800;
-    font-size:14px;
-    letter-spacing:0.03em;
-    cursor:pointer;
-    margin-top:6px;
+    width:100%; padding:14px; border-radius:10px; border:none;
+    background:linear-gradient(135deg,#4f7cff,#7a5cff); color:#fff; font-family:inherit;
+    font-weight:800; font-size:14px; letter-spacing:0.03em; cursor:pointer; margin-top:6px;
   }
-  .download-btn:active{ transform:translateY(1px); }
-
-  .preview-panel{
-    flex:1 1 460px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:12px;
+  .section-title{
+    font-size:13px; font-weight:800; letter-spacing:0.04em; text-transform:uppercase;
+    color:var(--text); margin:22px 0 12px; padding-top:16px; border-top:1px solid var(--border);
+    display:flex; align-items:center; justify-content:space-between;
   }
+  .section-title:first-of-type{ border-top:none; padding-top:0; margin-top:0; }
+  .add-match-btn, .remove-match-btn{
+    background:none; border:1px solid var(--border); color:var(--accent-ui);
+    font-family:inherit; font-size:12px; font-weight:700; padding:6px 12px;
+    border-radius:6px; cursor:pointer;
+  }
+  .remove-match-btn{ color:#ff6b6b; }
+  #match2Section{ display:none; }
+  .preview-panel{ flex:1 1 380px; display:flex; flex-direction:column; align-items:center; gap:12px; position:sticky; top:24px; }
   .canvas-wrap{
-    width:100%;
-    max-width:520px;
-    aspect-ratio:1/1;
-    border-radius:12px;
-    overflow:hidden;
-    box-shadow:0 20px 60px rgba(0,0,0,0.5);
-    background:#000;
+    width:100%; max-width:400px; aspect-ratio:9/16; border-radius:12px; overflow:hidden;
+    box-shadow:0 20px 60px rgba(0,0,0,0.5); background:#000;
   }
-  #posterCanvas{
-    width:100%;
-    height:100%;
-    display:block;
-  }
-  .hint{
-    font-size:12px;
-    color:var(--text-dim);
-    text-align:center;
-  }
+  #posterCanvas{ width:100%; height:100%; display:block; }
+  .hint{ font-size:12px; color:var(--text-dim); text-align:center; }
 </style>
 </head>
 <body>
 
 <div class="app">
   <div class="form-panel">
-    <h1>Matchday Post Builder</h1>
-    <p class="sub">Fill in the details — the poster updates live.</p>
+    <h1>Matchday Story Builder</h1>
+    <p class="sub">Instagram Story formaat (1080 × 1920). Vul de gegevens in — de preview werkt live.</p>
 
+    <div class="section-title">Jouw club</div>
     <div class="field">
-      <label for="clubName">Your club name</label>
-      <input type="text" id="clubName" value="City United FC">
+      <label for="clubName">Clubnaam</label>
+      <input type="text" id="clubName" value="VK. Borchtlombeek A">
     </div>
-
     <div class="field">
-      <label for="opponent">Opponent</label>
-      <input type="text" id="opponent" value="Riverside Athletic">
+      <label>Clublogo</label>
+      <label class="logo-drop" id="logoDropClub" for="logoInputClub">
+        <span id="logoDropTextClub">Klik om logo te uploaden</span>
+        <input type="file" id="logoInputClub" accept="image/*">
+      </label>
+      <button type="button" class="logo-clear" id="logoClearClub" style="display:none;">Logo verwijderen</button>
     </div>
-
     <div class="field">
-      <label>Home or away</label>
-      <div class="toggle-group">
-        <button type="button" id="btnHome" class="active">HOME</button>
-        <button type="button" id="btnAway">AWAY</button>
-      </div>
-    </div>
-
-    <div class="field">
-      <label for="competition">Competition / league (optional)</label>
-      <input type="text" id="competition" value="League Cup — Round 3">
-    </div>
-
-    <div class="row2">
-      <div class="field">
-        <label for="matchDate">Date</label>
-        <input type="date" id="matchDate">
-      </div>
-      <div class="field">
-        <label for="matchTime">Kickoff time</label>
-        <input type="time" id="matchTime" value="15:00">
-      </div>
-    </div>
-
-    <div class="field">
-      <label for="venue">Location / venue</label>
-      <input type="text" id="venue" value="Meadowbrook Stadium">
-    </div>
-
-    <div class="field">
-      <label>Colors</label>
+      <label>Kleuren</label>
       <div class="color-row">
         <div class="color-field">
-          <input type="color" id="colorPrimary" value="#0c1b33">
-          <span>Background</span>
+          <input type="color" id="colorPrimary" value="#cc0905">
+          <span>Achtergrond</span>
         </div>
         <div class="color-field">
-          <input type="color" id="colorAccent" value="#f2a900">
-          <span>Accent</span>
+          <input type="color" id="colorAccent" value="#ffffff">
+          <span>Tekst / logo's</span>
         </div>
       </div>
     </div>
 
+    <div class="section-title">
+      <span>Wedstrijd 1</span>
+    </div>
     <div class="field">
-      <label>Club badge / logo</label>
-      <label class="logo-drop" id="logoDrop" for="logoInput">
-        <span id="logoDropText">Click to upload a logo (PNG/JPG)</span>
-        <input type="file" id="logoInput" accept="image/*">
+      <label for="opponent1">Tegenstander</label>
+      <input type="text" id="opponent1" value="Jong FC Opwijk">
+    </div>
+    <div class="field">
+      <label>Logo tegenstander</label>
+      <label class="logo-drop" id="logoDrop1" for="logoInput1">
+        <span id="logoDropText1">Klik om logo te uploaden</span>
+        <input type="file" id="logoInput1" accept="image/*">
       </label>
-      <button type="button" class="logo-clear" id="logoClear" style="display:none;">Remove logo</button>
+      <button type="button" class="logo-clear" id="logoClear1" style="display:none;">Logo verwijderen</button>
+    </div>
+    <div class="field">
+      <label>Thuis of uit</label>
+      <div class="toggle-group">
+        <button type="button" id="btnHome1" class="active">THUIS</button>
+        <button type="button" id="btnAway1">UIT</button>
+      </div>
+    </div>
+    <div class="field">
+      <label for="competition1">Competitie / beker (optioneel)</label>
+      <input type="text" id="competition1" value="Beker van Brabant">
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label for="matchDate1">Datum</label>
+        <input type="date" id="matchDate1">
+      </div>
+      <div class="field">
+        <label for="matchTime1">Aftrap</label>
+        <input type="time" id="matchTime1" value="16:00">
+      </div>
+    </div>
+    <div class="field">
+      <label for="venue1">Locatie</label>
+      <input type="text" id="venue1" value="DE KLEI">
+    </div>
+
+    <div class="section-title">
+      <span>Wedstrijd 2</span>
+      <button type="button" class="add-match-btn" id="addMatchBtn">+ Toevoegen</button>
+      <button type="button" class="remove-match-btn" id="removeMatchBtn" style="display:none;">Verwijderen</button>
+    </div>
+    <div id="match2Section">
+      <div class="field">
+        <label for="opponent2">Tegenstander</label>
+        <input type="text" id="opponent2" value="Eendracht Aalst">
+      </div>
+      <div class="field">
+        <label>Logo tegenstander</label>
+        <label class="logo-drop" id="logoDrop2" for="logoInput2">
+          <span id="logoDropText2">Klik om logo te uploaden</span>
+          <input type="file" id="logoInput2" accept="image/*">
+        </label>
+        <button type="button" class="logo-clear" id="logoClear2" style="display:none;">Logo verwijderen</button>
+      </div>
+      <div class="field">
+        <label>Thuis of uit</label>
+        <div class="toggle-group">
+          <button type="button" id="btnHome2" class="active">THUIS</button>
+          <button type="button" id="btnAway2">UIT</button>
+        </div>
+      </div>
+      <div class="field">
+        <label for="competition2">Competitie / beker (optioneel)</label>
+        <input type="text" id="competition2" value="Provinciale">
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label for="matchDate2">Datum</label>
+          <input type="date" id="matchDate2">
+        </div>
+        <div class="field">
+          <label for="matchTime2">Aftrap</label>
+          <input type="time" id="matchTime2" value="14:30">
+        </div>
+      </div>
+      <div class="field">
+        <label for="venue2">Locatie</label>
+        <input type="text" id="venue2" value="">
+      </div>
     </div>
 
     <button class="download-btn" id="downloadBtn">Download PNG</button>
@@ -267,9 +230,9 @@
 
   <div class="preview-panel">
     <div class="canvas-wrap">
-      <canvas id="posterCanvas" width="1080" height="1080"></canvas>
+      <canvas id="posterCanvas" width="1080" height="1920"></canvas>
     </div>
-    <p class="hint">1080 × 1080px — ready to post straight to Instagram feed.</p>
+    <p class="hint">1080 × 1920px — Instagram Story formaat.</p>
   </div>
 </div>
 
@@ -278,59 +241,142 @@ const canvas = document.getElementById('posterCanvas');
 const ctx = canvas.getContext('2d');
 const W = canvas.width, H = canvas.height;
 
-let isHome = true;
-let logoImg = null;
+let matchCount = 1;
+let state = {
+  clubLogoProcessed: null,
+  logo1Processed: null,
+  logo2Processed: null,
+  home1: true,
+  home2: true
+};
 
 const el = id => document.getElementById(id);
-const inputs = ['clubName','opponent','competition','matchDate','matchTime','venue','colorPrimary','colorAccent'];
-inputs.forEach(id => el(id).addEventListener('input', draw));
 
-el('btnHome').addEventListener('click', () => { isHome = true; el('btnHome').classList.add('active'); el('btnAway').classList.remove('active'); draw(); });
-el('btnAway').addEventListener('click', () => { isHome = false; el('btnAway').classList.add('active'); el('btnHome').classList.remove('active'); draw(); });
+const textInputs = ['clubName','opponent1','competition1','matchDate1','matchTime1','venue1',
+                     'opponent2','competition2','matchDate2','matchTime2','venue2',
+                     'colorPrimary','colorAccent'];
+textInputs.forEach(id => el(id).addEventListener('input', draw));
 
-el('logoInput').addEventListener('change', e => {
-  const file = e.target.files[0];
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload = evt => {
-    const img = new Image();
-    img.onload = () => {
-      logoImg = img;
-      el('logoDropText').textContent = file.name;
-      el('logoDrop').classList.add('has-logo');
-      el('logoClear').style.display = 'block';
-      draw();
+function updateToggleUI(homeId, awayId, isHome){
+  if(isHome){ el(homeId).classList.add('active'); el(awayId).classList.remove('active'); }
+  else { el(awayId).classList.add('active'); el(homeId).classList.remove('active'); }
+}
+
+function setupToggle(homeBtnId, awayBtnId, stateKey){
+  el(homeBtnId).addEventListener('click', () => { state[stateKey] = true; updateToggleUI(homeBtnId, awayBtnId, true); draw(); });
+  el(awayBtnId).addEventListener('click', () => { state[stateKey] = false; updateToggleUI(homeBtnId, awayBtnId, false); draw(); });
+}
+setupToggle('btnHome1','btnAway1','home1');
+setupToggle('btnHome2','btnAway2','home2');
+
+// --- background removal + tint pipeline ---
+function removeBackground(img){
+  const w = img.naturalWidth || img.width, h = img.naturalHeight || img.height;
+  const off = document.createElement('canvas');
+  off.width = w; off.height = h;
+  const octx = off.getContext('2d');
+  octx.drawImage(img, 0, 0, w, h);
+  const imgData = octx.getImageData(0, 0, w, h);
+  const data = imgData.data;
+
+  const corners = [[0,0],[w-1,0],[0,h-1],[w-1,h-1],[Math.floor(w/2),0],[0,Math.floor(h/2)]];
+  let br=0,bg=0,bb=0, n=0;
+  corners.forEach(([x,y])=>{
+    const idx = (y*w+x)*4;
+    if(data[idx+3] > 10){ br+=data[idx]; bg+=data[idx+1]; bb+=data[idx+2]; n++; }
+  });
+  if(n===0){ n=1; }
+  br/=n; bg/=n; bb/=n;
+
+  const threshold = 42;
+  const softRange = 34;
+  for(let i=0;i<data.length;i+=4){
+    const r=data[i],g=data[i+1],b=data[i+2];
+    const dist = Math.sqrt((r-br)*(r-br)+(g-bg)*(g-bg)+(b-bb)*(b-bb));
+    if(dist < threshold){
+      data[i+3] = 0;
+    } else if(dist < threshold+softRange){
+      const factor = (dist-threshold)/softRange;
+      data[i+3] = Math.round(data[i+3]*factor);
+    }
+  }
+  octx.putImageData(imgData, 0, 0);
+  return off;
+}
+
+function tintCanvas(sourceCanvas, colorHex){
+  const w = sourceCanvas.width, h = sourceCanvas.height;
+  const tinted = document.createElement('canvas');
+  tinted.width = w; tinted.height = h;
+  const tctx = tinted.getContext('2d');
+  tctx.drawImage(sourceCanvas, 0, 0);
+  tctx.globalCompositeOperation = 'source-in';
+  tctx.fillStyle = colorHex;
+  tctx.fillRect(0, 0, w, h);
+  return tinted;
+}
+
+function setupLogoUpload(inputId, dropId, textId, clearId, processedKey, defaultText){
+  el(inputId).addEventListener('change', e => {
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = evt => {
+      const img = new Image();
+      img.onload = () => {
+        state[processedKey] = removeBackground(img);
+        el(textId).textContent = file.name;
+        el(dropId).classList.add('has-logo');
+        el(clearId).style.display = 'block';
+        draw();
+      };
+      img.src = evt.target.result;
     };
-    img.src = evt.target.result;
-  };
-  reader.readAsDataURL(file);
-});
+    reader.readAsDataURL(file);
+  });
+  el(clearId).addEventListener('click', () => {
+    state[processedKey] = null;
+    el(inputId).value = '';
+    el(textId).textContent = defaultText;
+    el(dropId).classList.remove('has-logo');
+    el(clearId).style.display = 'none';
+    draw();
+  });
+}
+setupLogoUpload('logoInputClub','logoDropClub','logoDropTextClub','logoClearClub','clubLogoProcessed','Klik om logo te uploaden');
+setupLogoUpload('logoInput1','logoDrop1','logoDropText1','logoClear1','logo1Processed','Klik om logo te uploaden');
+setupLogoUpload('logoInput2','logoDrop2','logoDropText2','logoClear2','logo2Processed','Klik om logo te uploaden');
 
-el('logoClear').addEventListener('click', () => {
-  logoImg = null;
-  el('logoInput').value = '';
-  el('logoDropText').textContent = 'Click to upload a logo (PNG/JPG)';
-  el('logoDrop').classList.remove('has-logo');
-  el('logoClear').style.display = 'none';
+el('addMatchBtn').addEventListener('click', () => {
+  matchCount = 2;
+  el('match2Section').style.display = 'block';
+  el('addMatchBtn').style.display = 'none';
+  el('removeMatchBtn').style.display = 'inline-block';
+  draw();
+});
+el('removeMatchBtn').addEventListener('click', () => {
+  matchCount = 1;
+  el('match2Section').style.display = 'none';
+  el('addMatchBtn').style.display = 'inline-block';
+  el('removeMatchBtn').style.display = 'none';
   draw();
 });
 
-// default date = next Saturday
-(function setDefaultDate(){
-  const d = new Date();
-  const day = d.getDay();
-  const addDays = (6 - day + 7) % 7 || 7;
-  d.setDate(d.getDate() + addDays);
-  el('matchDate').value = d.toISOString().slice(0,10);
+(function setDefaultDates(){
+  const d1 = new Date();
+  const day = d1.getDay();
+  const addDays1 = (6 - day + 7) % 7 || 7;
+  d1.setDate(d1.getDate() + addDays1);
+  el('matchDate1').value = d1.toISOString().slice(0,10);
+
+  const d2 = new Date(d1);
+  d2.setDate(d2.getDate() + 7);
+  el('matchDate2').value = d2.toISOString().slice(0,10);
 })();
 
 function hexToRgb(hex){
   const m = hex.replace('#','');
-  return {
-    r: parseInt(m.substring(0,2),16),
-    g: parseInt(m.substring(2,4),16),
-    b: parseInt(m.substring(4,6),16)
-  };
+  return { r: parseInt(m.substring(0,2),16), g: parseInt(m.substring(2,4),16), b: parseInt(m.substring(4,6),16) };
 }
 function shade(hex, amt){
   const {r,g,b} = hexToRgb(hex);
@@ -345,16 +391,9 @@ function rgba(hex, a){
 function formatDate(dateStr){
   if(!dateStr) return '';
   const [y,m,d] = dateStr.split('-').map(Number);
-  const dt = new Date(y, m-1, d);
-  return dt.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' }).toUpperCase();
+  return `${String(d).padStart(2,'0')}/${String(m).padStart(2,'0')}/${y}`;
 }
-function formatTime(timeStr){
-  if(!timeStr) return '';
-  let [h,m] = timeStr.split(':').map(Number);
-  const ampm = h >= 12 ? 'PM' : 'AM';
-  h = h % 12 || 12;
-  return `${h}:${String(m).padStart(2,'0')} ${ampm}`;
-}
+function formatTime(timeStr){ return timeStr || ''; }
 
 function wrapText(text, maxWidth, font){
   ctx.font = font;
@@ -366,14 +405,30 @@ function wrapText(text, maxWidth, font){
     if(ctx.measureText(test).width > maxWidth && line){
       lines.push(line);
       line = w;
-    } else {
-      line = test;
-    }
+    } else { line = test; }
   }
   if(line) lines.push(line);
   return lines;
 }
 
+function drawCalendar(cx, cy, size, color){
+  ctx.strokeStyle = color;
+  ctx.lineWidth = size*0.09;
+  ctx.strokeRect(cx-size/2, cy-size/2, size, size);
+  ctx.beginPath();
+  ctx.moveTo(cx-size/2, cy-size*0.12);
+  ctx.lineTo(cx+size/2, cy-size*0.12);
+  ctx.stroke();
+}
+function drawClock(cx, cy, size, color){
+  ctx.strokeStyle = color;
+  ctx.lineWidth = size*0.09;
+  ctx.beginPath(); ctx.arc(cx, cy, size/2, 0, Math.PI*2); ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(cx, cy); ctx.lineTo(cx, cy - size*0.28);
+  ctx.moveTo(cx, cy); ctx.lineTo(cx + size*0.2, cy);
+  ctx.stroke();
+}
 function drawPin(cx, cy, size, color){
   ctx.fillStyle = color;
   ctx.beginPath();
@@ -385,219 +440,135 @@ function drawPin(cx, cy, size, color){
   ctx.lineTo(cx, cy + size*0.62);
   ctx.closePath();
   ctx.fill();
-  ctx.globalCompositeOperation = 'destination-out';
-  ctx.beginPath();
-  ctx.arc(cx, cy - size*0.15, size*0.16, 0, Math.PI*2);
-  ctx.fill();
-  ctx.globalCompositeOperation = 'source-over';
-}
-function drawCalendar(cx, cy, size, color){
-  ctx.strokeStyle = color;
-  ctx.lineWidth = size*0.08;
-  ctx.strokeRect(cx-size/2, cy-size/2, size, size);
-  ctx.beginPath();
-  ctx.moveTo(cx-size/2, cy-size*0.15);
-  ctx.lineTo(cx+size/2, cy-size*0.15);
-  ctx.stroke();
-  ctx.lineWidth = size*0.1;
-  ctx.beginPath(); ctx.moveTo(cx-size*0.28, cy-size*0.62); ctx.lineTo(cx-size*0.28, cy-size*0.3); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(cx+size*0.28, cy-size*0.62); ctx.lineTo(cx+size*0.28, cy-size*0.3); ctx.stroke();
-}
-function drawClock(cx, cy, size, color){
-  ctx.strokeStyle = color;
-  ctx.lineWidth = size*0.09;
-  ctx.beginPath(); ctx.arc(cx, cy, size/2, 0, Math.PI*2); ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(cx, cy);
-  ctx.lineTo(cx, cy - size*0.28);
-  ctx.moveTo(cx, cy);
-  ctx.lineTo(cx + size*0.2, cy);
-  ctx.stroke();
 }
 
-function draw(){
-  const clubName = el('clubName').value || 'HOME CLUB';
-  const opponent = (el('opponent').value || 'OPPONENT').toUpperCase();
-  const competition = el('competition').value || '';
-  const dateStr = formatDate(el('matchDate').value);
-  const timeStr = formatTime(el('matchTime').value);
-  const venue = el('venue').value || '';
-  const primary = el('colorPrimary').value;
-  const accent = el('colorAccent').value;
-
-  ctx.clearRect(0,0,W,H);
-
-  // background
-  const bgGrad = ctx.createLinearGradient(0,0,W,H);
-  bgGrad.addColorStop(0, shade(primary, 18));
-  bgGrad.addColorStop(1, shade(primary, -25));
-  ctx.fillStyle = bgGrad;
-  ctx.fillRect(0,0,W,H);
-
-  // diagonal accent stripe (signature element)
-  ctx.save();
-  ctx.beginPath();
-  ctx.moveTo(-100, H*0.62);
-  ctx.lineTo(W*0.55, -100);
-  ctx.lineTo(W+100, -100);
-  ctx.lineTo(W+100, H*0.30);
-  ctx.lineTo(W*0.20, H+100);
-  ctx.lineTo(-100, H+100);
-  ctx.closePath();
-  ctx.fillStyle = rgba(accent, 0.10);
-  ctx.fill();
-  ctx.restore();
-
-  // thin diagonal accent line
-  ctx.save();
-  ctx.strokeStyle = rgba(accent, 0.5);
-  ctx.lineWidth = 4;
-  ctx.beginPath();
-  ctx.moveTo(-50, H*0.66);
-  ctx.lineTo(W*0.58, -50);
-  ctx.stroke();
-  ctx.restore();
-
-  // top bar: badge + club name + HOME/AWAY pill
-  const topY = 96;
-  if(logoImg){
-    const r = 46;
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(96, topY, r, 0, Math.PI*2);
-    ctx.closePath();
-    ctx.clip();
-    const iw = logoImg.width, ih = logoImg.height;
-    const scale = Math.max((r*2)/iw, (r*2)/ih);
+function drawLogoBox(processedCanvas, cx, cy, boxSize, color, initials){
+  if(processedCanvas){
+    const tinted = tintCanvas(processedCanvas, color);
+    const iw = tinted.width, ih = tinted.height;
+    const scale = Math.min(boxSize/iw, boxSize/ih);
     const dw = iw*scale, dh = ih*scale;
-    ctx.drawImage(logoImg, 96-dw/2, topY-dh/2, dw, dh);
-    ctx.restore();
-    ctx.strokeStyle = rgba(accent, 0.8);
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.arc(96, topY, r, 0, Math.PI*2);
-    ctx.stroke();
+    ctx.drawImage(tinted, cx-dw/2, cy-dh/2, dw, dh);
   } else {
-    ctx.fillStyle = rgba(accent, 0.16);
-    ctx.beginPath();
-    ctx.arc(96, topY, 46, 0, Math.PI*2);
-    ctx.fill();
-    ctx.strokeStyle = rgba(accent, 0.8);
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.arc(96, topY, 46, 0, Math.PI*2);
-    ctx.stroke();
+    ctx.fillStyle = color;
+    ctx.font = `700 ${Math.round(boxSize*0.32)}px Inter`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(initials, cx, cy+2);
+  }
+}
+
+function getInitials(name){
+  return (name||'?').split(' ').map(w=>w[0]).join('').slice(0,3).toUpperCase();
+}
+
+function drawMatchBlock(topY, blockH, compact, m){
+  const cx = W/2;
+  const accent = el('colorAccent').value;
+  const boxSize = compact ? 200 : 280;
+  const logosY = topY + (compact ? 130 : 330);
+  const leftX = cx - (compact ? 300 : 340)  +20;
+  const rightX = cx + (compact ? 300 : 340) -20;
+  const vsFont = compact ? "700 70px 'Playfair Display'" : "700 100px 'Playfair Display'";
+  const nameFont = compact ? "700 23px 'Playfair Display'" : "700 35px 'Playfair Display'";
+  const eyebrowFont = compact ? "600 18px Inter" : "600 22px Inter";
+
+  if(m.competition){
+    const eybY = topY + (compact ? 26 : 40);
+    ctx.font = eyebrowFont;
+    ctx.textAlign = 'center';
+    const label = m.competition.toUpperCase();
+    const labelW = ctx.measureText(label).width;
     ctx.fillStyle = accent;
-    ctx.font = "700 34px Inter";
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    const initials = clubName.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-    ctx.fillText(initials, 96, topY+2);
+    ctx.fillText(label, cx, eybY);
+    const lineGap = labelW/2 + 24;
+    const lineW = compact ? 90 : 140;
+    ctx.strokeStyle = rgba(accent, 0.6);
+    ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(cx-lineGap-lineW, eybY-6); ctx.lineTo(cx-lineGap, eybY-6); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx+lineGap, eybY-6); ctx.lineTo(cx+lineGap+lineW, eybY-6); ctx.stroke();
   }
 
-  ctx.textAlign = 'left';
-  ctx.textBaseline = 'alphabetic';
-  ctx.fillStyle = '#ffffff';
-  ctx.font = "800 30px Inter";
-  ctx.fillText(clubName.toUpperCase(), 162, topY - 6);
-  ctx.fillStyle = rgba('#ffffff', 0.6);
-  ctx.font = "600 20px Inter";
-  ctx.fillText('MATCHDAY', 162, topY + 24);
+  // Thuis: eigen club links, tegenstander rechts. Uit: tegenstander links, eigen club rechts.
+  const clubOnLeft = m.isHome;
+  const leftLogo = clubOnLeft ? m.clubLogo : m.oppLogo;
+  const rightLogo = clubOnLeft ? m.oppLogo : m.clubLogo;
+  const leftName = clubOnLeft ? m.clubName : m.opponent;
+  const rightName = clubOnLeft ? m.opponent : m.clubName;
 
-  // home/away pill
-  const pillLabel = isHome ? 'HOME' : 'AWAY';
-  ctx.font = "800 22px Inter";
-  const pillW = ctx.measureText(pillLabel).width + 44;
-  const pillX = W - 60 - pillW;
+  drawLogoBox(leftLogo, leftX, logosY, boxSize, accent, getInitials(leftName));
+  drawLogoBox(rightLogo, rightX, logosY, boxSize, accent, getInitials(rightName));
+  ctx.font = vsFont;
   ctx.fillStyle = accent;
-  roundRect(ctx, pillX, topY-24, pillW, 48, 24);
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('VS', cx, logosY);
+
+  const namesY = logosY + boxSize/2 + (compact ? 38 : 60);
+  ctx.font = nameFont;
+  ctx.fillStyle = accent;
+  ctx.textBaseline = 'alphabetic';
+  const maxNameW = compact ? 300 : 500;
+  const leftLines = wrapText(leftName.toUpperCase(), maxNameW, nameFont);
+  const rightLines = wrapText(rightName.toUpperCase(), maxNameW, nameFont);
+  const lineH = compact ? 30 : 44;
+  leftLines.forEach((line,i)=> ctx.fillText(line, leftX, namesY + i*lineH));
+  rightLines.forEach((line,i)=> ctx.fillText(line, rightX, namesY + i*lineH));
+  const maxLines = Math.max(leftLines.length, rightLines.length);
+
+  const pillY = namesY + (maxLines-1)*lineH + (compact ? 42 : 60);
+  const pillLabel = m.isHome ? 'THUISWEDSTRIJD' : 'UITWEDSTRIJD';
+  const pillFont = compact ? "700 15px Inter" : "700 19px Inter";
+  ctx.font = pillFont;
+  const pillTextW = ctx.measureText(pillLabel).width;
+  const pillPadX = compact ? 16 : 22;
+  const pillW = pillTextW + pillPadX*2;
+  const pillH = compact ? 32 : 42;
+  ctx.fillStyle = accent;
+  roundRect(ctx, cx-pillW/2, pillY-pillH/2, pillW, pillH, pillH/2);
   ctx.fill();
-  ctx.fillStyle = '#101010';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(pillLabel, pillX + pillW/2, topY + 1);
-  ctx.textAlign = 'left';
-  ctx.textBaseline = 'alphabetic';
+  ctx.fillStyle = el('colorPrimary').value;
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(pillLabel, cx, pillY+1);
 
-  // competition eyebrow
-  if(competition){
-    ctx.fillStyle = rgba(accent, 0.95);
-    ctx.font = "700 24px Inter";
-    ctx.textAlign = 'center';
-    ctx.fillText(competition.toUpperCase(), W/2, 250);
-  }
-
-  // VS block
-  ctx.textAlign = 'center';
-  ctx.fillStyle = rgba('#ffffff', 0.18);
-  ctx.font = "400 130px Anton";
-  ctx.fillText('VS', W/2, 400);
-
-  // team line: "US" vs opponent
-  ctx.font = "400 46px Anton";
-  ctx.fillStyle = rgba('#ffffff', 0.7);
-  const usLabel = isHome ? clubName.toUpperCase() : opponent;
-  const themLabel = isHome ? opponent : clubName.toUpperCase();
-  ctx.fillText(usLabel, W/2, 470);
-
-  // big opponent name (the hero)
-  const heroFont = "400 96px Anton";
-  ctx.font = heroFont;
-  let heroLines = wrapText(themLabel, W-160, heroFont);
-  if(heroLines.length > 2){ heroLines = [themLabel]; ctx.font = "400 66px Anton"; heroLines = wrapText(themLabel, W-160, "400 66px Anton"); }
-  ctx.fillStyle = accent;
-  ctx.font = heroLines.length > 1 ? "400 78px Anton" : "400 96px Anton";
-  let heroY = 590;
-  heroLines.forEach((line,i) => {
-    ctx.fillText(line, W/2, heroY + i*90);
-  });
-
-  // vs small connector under "us" line, above hero
-  ctx.font = "600 24px Inter";
-  ctx.fillStyle = rgba('#ffffff', 0.4);
-
-  // bottom info bar
-  const barH = 230;
-  const barY = H - barH;
-  ctx.fillStyle = rgba('#000000', 0.32);
-  ctx.fillRect(0, barY, W, barH);
-  ctx.strokeStyle = rgba(accent, 0.6);
+  const dividerY = pillY + (compact ? 34 : 48);
+  ctx.strokeStyle = rgba(accent, 0.5);
   ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(0, barY);
-  ctx.lineTo(W, barY);
-  ctx.stroke();
+  const dividerW = compact ? 320 : 460;
+  ctx.beginPath(); ctx.moveTo(cx-dividerW/2, dividerY); ctx.lineTo(cx+dividerW/2, dividerY); ctx.stroke();
 
-  const rowY1 = barY + 62;
-  const rowY2 = barY + 150;
-  const iconSize = 34;
-  const leftX = 90;
-
-  ctx.textAlign = 'left';
+  const dtY = dividerY + (compact ? 48 : 70);
+  const iconSize = compact ? 26 : 34;
+  const dtFont = compact ? "700 22px Inter" : "700 30px Inter";
+  ctx.font = dtFont;
+  ctx.fillStyle = accent;
   ctx.textBaseline = 'middle';
-
-  // date
-  drawCalendar(leftX, rowY1, iconSize, accent);
-  ctx.fillStyle = '#ffffff';
-  ctx.font = "700 30px Inter";
-  ctx.fillText(dateStr || 'DATE TBC', leftX + 40, rowY1);
-
-  // time
-  ctx.font = "700 30px Inter";
-  const timeX = W - 90;
-  ctx.textAlign = 'right';
-  ctx.fillText(timeStr || '', timeX - 40, rowY1);
-  drawClock(timeX, rowY1, iconSize, accent);
-
-  // venue (full width row below)
   ctx.textAlign = 'left';
-  drawPin(leftX, rowY2, iconSize, accent);
-  ctx.fillStyle = rgba('#ffffff', 0.92);
-  ctx.font = "600 28px Inter";
-  const venueLines = wrapText(venue.toUpperCase(), W - 180, "600 28px Inter");
-  venueLines.slice(0,2).forEach((line,i) => {
-    ctx.fillText(line, leftX + 40, rowY2 + i*34 - (venueLines.length>1?17:0));
-  });
+  const dateStr = formatDate(m.date) || 'DATUM TBC';
+  const timeStr = formatTime(m.time);
+  const dateW = ctx.measureText(dateStr).width;
+  const timeW = ctx.measureText(timeStr).width;
+  const gap = compact ? 60 : 90;
+  const totalW = iconSize + 12 + dateW + gap + iconSize + 12 + timeW;
+  let startX = cx - totalW/2;
+  drawCalendar(startX + iconSize/2, dtY, iconSize, accent);
+  ctx.fillText(dateStr, startX + iconSize + 12, dtY);
+  let clockX = startX + iconSize + 12 + dateW + gap;
+  drawClock(clockX + iconSize/2, dtY, iconSize, accent);
+  ctx.fillText(timeStr, clockX + iconSize + 12, dtY);
+
+  if(m.venue){
+    const venY = dtY + (compact ? 44 : 62);
+    const venFont = compact ? "600 20px Inter" : "600 26px Inter";
+    ctx.font = venFont;
+    const venLines = wrapText(m.venue.toUpperCase(), compact ? 520 : 660, venFont);
+    const vlh = compact ? 24 : 32;
+    const pinSize = compact ? 22 : 28;
+    ctx.textAlign = 'left';
+    const blockW = pinSize + 10 + Math.max(...venLines.map(l=>ctx.measureText(l).width));
+    let vx = cx - blockW/2;
+    drawPin(vx + pinSize/2, venY, pinSize, accent);
+    venLines.forEach((line,i)=> ctx.fillText(line, vx + pinSize + 10, venY + i*vlh));
+  }
 
   ctx.textBaseline = 'alphabetic';
 }
@@ -612,20 +583,125 @@ function roundRect(ctx, x, y, w, h, r){
   ctx.closePath();
 }
 
+function draw(){
+  const primary = el('colorPrimary').value;
+  const accent = el('colorAccent').value;
+  
+
+  ctx.clearRect(0,0,W,H);
+
+  const bgGrad = ctx.createLinearGradient(0,0,0,H);
+  bgGrad.addColorStop(0, shade(primary, 10));
+  bgGrad.addColorStop(1, shade(primary, -12));
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0,0,W,H);
+
+  ctx.save();
+  ctx.strokeStyle = rgba(accent, 0.18);
+  ctx.lineWidth = 6;
+  for(let i=0;i<5;i++){
+    ctx.beginPath();
+    ctx.moveTo(-20 + i*24, 40);
+    ctx.lineTo(-60 + i*24, 130);
+    ctx.stroke();
+  }
+  for(let i=0;i<5;i++){
+    ctx.beginPath();
+    ctx.moveTo(W+20 - i*24, H-40);
+    ctx.lineTo(W+60 - i*24, H-130);
+    ctx.stroke();
+  }
+  ctx.restore();
+
+  const cx = W/2;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'alphabetic';
+  ctx.fillStyle = accent;
+  ctx.font = "800 150px 'Playfair Display'";
+  ctx.fillText('MATCHDAY', cx, 300);
+
+  const dividerY = 400;
+  ctx.font = "700 26px 'Playfair Display'";
+  ctx.fillStyle = accent;
+  ctx.fillText('X', cx, dividerY+8);
+  ctx.strokeStyle = rgba(accent, 0.6);
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(cx-320, dividerY); ctx.lineTo(cx-40, dividerY); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx+40, dividerY); ctx.lineTo(cx+320, dividerY); ctx.stroke();
+
+  const baseMatch = { clubName: clubName, clubLogo: state.clubLogoProcessed };
+
+  if(matchCount === 1){
+    const m1 = Object.assign({}, baseMatch, {
+      clubName: el('clubName').value || 'CLUB',
+      opponent: el('opponent1').value || 'TEGENSTANDER',
+      competition: el('competition1').value,
+      date: el('matchDate1').value,
+      time: el('matchTime1').value,
+      venue: el('venue1').value,
+      isHome: state.home1,
+      oppLogo: state.logo1Processed
+    });
+    drawMatchBlock(470, 1350, false, m1);
+  } else {
+    const m1 = Object.assign({}, baseMatch, {
+
+      clubName: el('clubName').value || 'CLUB',
+      opponent: el('opponent1').value || 'TEGENSTANDER',
+      competition: el('competition1').value,
+      date: el('matchDate1').value,
+      time: el('matchTime1').value,
+      venue: el('venue1').value,
+      isHome: state.home1,
+      oppLogo: state.logo1Processed
+    });
+    const m2 = Object.assign({}, baseMatch, {
+      clubName: swapLastLetter(el('clubName').value),
+      opponent: el('opponent2').value || 'TEGENSTANDER',
+      competition: el('competition2').value,
+      date: el('matchDate2').value,
+      time: el('matchTime2').value,
+      venue: el('venue2').value,
+      isHome: state.home2,
+      oppLogo: state.logo2Processed
+    });
+    // Two-match layout: keep the cards close together and inside the
+    // Instagram safe area (~250px top/bottom).
+    drawMatchBlock(430, 680, true, m1);
+
+    ctx.strokeStyle = rgba(accent, 0.35);
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(cx-420, 980); ctx.lineTo(cx+420, 980); ctx.stroke();
+
+    drawMatchBlock(1010, 680, true, m2);
+  }
+}
+
+function swapLastLetter(name){
+  if (!name) return 'CLUB';
+  const last = name.slice(-1);
+
+  if (last === 'A') return name.slice(0, -1) + 'B';
+  if (last === 'B') return name.slice(0, -1) + 'A';
+
+  return name; // unchanged
+}
+
+
+
 el('downloadBtn').addEventListener('click', () => {
   const link = document.createElement('a');
-  const opponent = (el('opponent').value || 'match').replace(/\s+/g,'_');
-  link.download = `matchday_${opponent}.png`;
+  const opp = (el('opponent1').value || 'match').replace(/\s+/g,'_');
+  link.download = `matchday_story_${opp}.png`;
   link.href = canvas.toDataURL('image/png');
   link.click();
 });
 
-// load fonts then draw
 if(document.fonts && document.fonts.load){
   Promise.all([
-    document.fonts.load("400 96px Anton"),
-    document.fonts.load("800 30px Inter"),
-    document.fonts.load("700 24px Inter")
+    document.fonts.load("800 150px 'Playfair Display'"),
+    document.fonts.load("700 84px 'Playfair Display'"),
+    document.fonts.load("700 700 Inter")
   ]).then(draw).catch(draw);
   document.fonts.ready.then(draw);
 } else {
