@@ -692,21 +692,26 @@ function swapLastLetter(name){
 el('downloadBtn').addEventListener('click', () => {
   const opp = (el('opponent1').value || 'match').replace(/\s+/g,'_');
   const fileName = `matchday_story_${opp}.png`;
-  const dataURL = canvas.toDataURL('image/png');
 
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-  if (isMobile) {
-    // Mobile browsers block programmatic downloads → open image instead
-    window.open(dataURL, '_blank');
-  } else {
-    // Desktop browsers allow programmatic downloads
-    const link = document.createElement('a');
-    link.download = fileName;
-    link.href = dataURL;
-    link.click();
-  }
+  canvas.toBlob(blob => {
+    const url = URL.createObjectURL(blob);
+
+    if (isMobile) {
+      // Mobile: open image in new tab (this ALWAYS works)
+      window.open(url, '_blank');
+    } else {
+      // Desktop: trigger download
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+  }, 'image/png');
 });
+
 
 
 if(document.fonts && document.fonts.load){
